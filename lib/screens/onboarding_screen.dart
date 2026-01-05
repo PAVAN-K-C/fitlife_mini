@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -40,6 +41,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenOnboarding', true);
+    if (mounted) {
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
 
   @override
@@ -98,7 +107,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 cards.length,
-                (index) => Padding(
+                    (index) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Container(
                     width: 8,
@@ -121,24 +130,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed('/login');
-                  },
+                  onPressed: _completeOnboarding,
                   child: const Text('Skip'),
                 ),
                 ElevatedButton(
                   onPressed: _currentIndex < cards.length - 1
                       ? () {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      : () {
-                          Navigator.of(context)
-                              .pushReplacementNamed('/login');
-                        },
+                    _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                      : _completeOnboarding,
                   child: Text(_currentIndex < cards.length - 1
                       ? 'Next'
                       : 'Get Started'),

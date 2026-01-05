@@ -12,41 +12,6 @@ A mobile fitness tracking application designed for offline-first experience. The
 - 👤 **User Authentication**: Support for registered users and guest access
 - 💾 **Local Database**: SQLite for reliable offline data persistence
 
-## Project Structure
-
-```
-fitlife_mini/
-├── lib/
-│   ├── main.dart                 # App entry point
-│   ├── models/                   # Data models
-│   │   ├── user.dart
-│   │   ├── workout.dart
-│   │   └── reminder.dart
-│   ├── providers/                # State management
-│   │   ├── auth_provider.dart
-│   │   ├── theme_provider.dart
-│   │   └── workout_provider.dart
-│   ├── services/                 # Business logic
-│   │   └── database_service.dart
-│   └── screens/                  # UI screens
-│       ├── splash_screen.dart
-│       ├── onboarding_screen.dart
-│       ├── login_screen.dart
-│       ├── guest_login_screen.dart
-│       ├── home_screen.dart
-│       ├── dashboard_screen.dart
-│       ├── workouts_screen.dart
-│       ├── add_workout_screen.dart
-│       ├── reminders_screen.dart
-│       └── settings_screen.dart
-├── assets/                       # App assets
-│   ├── images/
-│   └── fonts/
-├── android/                      # Android-specific code
-├── ios/                          # iOS-specific code
-├── pubspec.yaml                  # Dependencies
-└── README.md
-```
 
 ## Getting Started
 
@@ -130,44 +95,6 @@ All data is stored locally using SQLite. The application does not require intern
 - User data is stored on device
 - Reminders are managed locally
 - No API calls or network requests
-
-## Database Schema
-
-### Users Table
-```sql
-CREATE TABLE users (
-  id TEXT PRIMARY KEY,
-  email TEXT UNIQUE NOT NULL,
-  password TEXT,
-  isGuest INTEGER NOT NULL DEFAULT 0,
-  createdAt TEXT NOT NULL
-)
-```
-
-### Workouts Table
-```sql
-CREATE TABLE workouts (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  type TEXT NOT NULL,
-  duration INTEGER NOT NULL,
-  caloriesBurned INTEGER NOT NULL,
-  date TEXT NOT NULL,
-  description TEXT
-)
-```
-
-### Reminders Table
-```sql
-CREATE TABLE reminders (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  description TEXT NOT NULL,
-  scheduledTime TEXT NOT NULL,
-  isActive INTEGER NOT NULL DEFAULT 1,
-  frequency TEXT NOT NULL DEFAULT 'daily'
-)
-```
 
 ## State Management
 

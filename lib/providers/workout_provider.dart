@@ -12,12 +12,12 @@ class WorkoutProvider extends ChangeNotifier {
 
   Future<void> loadAllWorkouts() async {
     _isLoading = true;
-    notifyListeners();
+    // Don't call notifyListeners() here - it causes the build error
 
     try {
       _workouts = await _databaseService.getAllWorkouts();
       _isLoading = false;
-      notifyListeners();
+      notifyListeners(); // Only notify after data is loaded
     } catch (e) {
       _isLoading = false;
       notifyListeners();
@@ -26,7 +26,6 @@ class WorkoutProvider extends ChangeNotifier {
 
   Future<void> loadWorkoutsByType(String type) async {
     _isLoading = true;
-    notifyListeners();
 
     try {
       _workouts = await _databaseService.getWorkoutsByType(type);
@@ -41,8 +40,8 @@ class WorkoutProvider extends ChangeNotifier {
   Future<void> addWorkout(Workout workout) async {
     try {
       await _databaseService.addWorkout(workout);
-      _workouts.insert(0, workout);
-      notifyListeners();
+      // Reload all workouts to ensure proper sorting
+      await loadAllWorkouts();
     } catch (e) {
       rethrow;
     }
@@ -80,6 +79,7 @@ class WorkoutProvider extends ChangeNotifier {
   }
 
   List<Workout> getLastThreeWorkouts() {
+    if (_workouts.isEmpty) return [];
     return _workouts.take(3).toList();
   }
 }

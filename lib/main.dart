@@ -7,8 +7,14 @@ import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'services/notification_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize notification service
+  await NotificationService().initialize();
+
   runApp(
     MultiProvider(
       providers: [
@@ -44,10 +50,13 @@ class FitLifeMiniApp extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
+              iconTheme: IconThemeData(color: Colors.black),
             ),
             bottomNavigationBarTheme: const BottomNavigationBarThemeData(
               backgroundColor: Colors.white,
               elevation: 8,
+              selectedItemColor: Colors.blue,
+              unselectedItemColor: Colors.grey,
             ),
           ),
           darkTheme: ThemeData(
@@ -64,10 +73,13 @@ class FitLifeMiniApp extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
+              iconTheme: const IconThemeData(color: Colors.white),
             ),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(
               backgroundColor: Colors.grey[850],
               elevation: 8,
+              selectedItemColor: Colors.blue,
+              unselectedItemColor: Colors.grey,
             ),
           ),
           themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,

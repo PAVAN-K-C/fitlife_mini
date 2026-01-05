@@ -16,30 +16,38 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    const DashboardScreen(),
-    const WorkoutsScreen(),
-    const RemindersScreen(),
-    const SettingsScreen(),
-  ];
+  // Method to change tab from child widgets
+  void _changeTab(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    context.read<WorkoutProvider>().loadAllWorkouts();
+    // Schedule the data loading after the build is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<WorkoutProvider>().loadAllWorkouts();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Build screens list with callback
+    final List<Widget> screens = [
+      DashboardScreen(onNavigate: _changeTab),  // Pass callback
+      const WorkoutsScreen(),
+      const RemindersScreen(),
+      const SettingsScreen(),
+    ];
+
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+        onTap: _changeTab,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
